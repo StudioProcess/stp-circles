@@ -33,15 +33,9 @@ function setup() {
   camera = new THREE.PerspectiveCamera( 75, W / H, 0.01, 1000 );
   controls = new THREE.OrbitControls( camera, renderer.domElement );
   camera.position.z = 15;
-  // camera.rotation.y = 90;
 
 
-  // let geo = new THREE.BoxGeometry( 1, 1, 1 );
-  // let mesh = new THREE.Mesh( geo, mat );
-  let size = 3;
-  // let colors = [0x0885c2, 0xfbb132, 0x666666, 0x1c8b3c, 0xed334e];
   colors = [0xFFFFFF]
-  // let colors = [0x000000, 0x111111, 0x222222, 0x333333, 0x444444, 0x555555, 0x666666, 0x777777, 0x888888, 0x999999];
   for(let i = 0; i < numberCircles; i++) {
     let mat = new THREE.MeshBasicMaterial({
       color: colors[i%colors.length],
