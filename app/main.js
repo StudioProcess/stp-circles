@@ -38,7 +38,7 @@ function setup() {
   camera.position.z = 15;
 
 
-  colors = [0xFFFFFF]
+  colors = [0xFFFFFF];
   for(let i = 0; i < numberCircles; i++) {
     let mat = new THREE.MeshBasicMaterial({
       color: colors[i%colors.length],
@@ -46,20 +46,18 @@ function setup() {
       transparent: true,
       opacity: 0.8,
       // blending: THREE.MultiplyBlending
-   });
+    });
     let mesh = new THREE.Mesh( new THREE.TorusBufferGeometry( 1+i, 1/(1+i*0.5), 30, 100 ), mat );
     // let mesh = new THREE.Mesh( new THREE.CylinderGeometry( 1+i, 1+i, 0.1, 32 ), mat );
     circles.push( mesh );
     scene.add( mesh );
   }
   console.log( circles );
-
-
 }
 
-let angle;
-let stepAngle;
-let steps;
+// let angle;
+// let stepAngle;
+// let steps;
 
 function loop(time) { // eslint-disable-line no-unused-vars
 
@@ -99,7 +97,7 @@ document.addEventListener('keydown', e => {
         transparent: true,
         opacity: 0.8,
         // blending: THREE.MultiplyBlending
-     });
+      });
       let mesh = new THREE.Mesh( new THREE.TorusBufferGeometry( 1+i, 1/(1+i*0.5), 30, 60 ), mat );
       // let mesh = new THREE.Mesh( new THREE.CylinderGeometry( 1+i, 1+i, 0.1, 32 ), mat );
       circles.push( mesh );
@@ -121,7 +119,7 @@ document.addEventListener('keydown', e => {
         transparent: true,
         // opacity: 0.8,
         blending: THREE.MultiplyBlending
-     });
+      });
       let mesh = new THREE.Mesh( new THREE.TorusBufferGeometry( 1+i, 1/(1+i*0.5), 30, 60 ), mat );
       // let mesh = new THREE.Mesh( new THREE.CylinderGeometry( 1+i, 1+i, 0.1, 32 ), mat );
       circles.push( mesh );
@@ -143,7 +141,7 @@ document.addEventListener('keydown', e => {
         transparent: true,
         opacity: 0.8
         // blending: THREE.MultiplyBlending
-     });
+      });
       let mesh = new THREE.Mesh( new THREE.TorusBufferGeometry( 1+i, 1/(1+i*0.5), 30, 60 ), mat );
       // let mesh = new THREE.Mesh( new THREE.CylinderGeometry( 1+i, 1+i, 0.1, 32 ), mat );
       circles.push( mesh );
