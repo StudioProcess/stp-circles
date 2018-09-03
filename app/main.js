@@ -1,3 +1,6 @@
+import '../lib/loadThree.js';
+import '../node_modules/three/examples/js/controls/OrbitControls.js';
+
 const W = 1280;
 const H = 800;
 
