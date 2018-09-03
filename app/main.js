@@ -1,5 +1,6 @@
 import '../lib/loadThree.js';
 import '../node_modules/three/examples/js/controls/OrbitControls.js';
+import * as util from './util.js';
 
 const W = 1280;
 const H = 800;
@@ -23,7 +24,8 @@ function setup() {
 
   renderer = new THREE.WebGLRenderer({
     antialias: true,
-    alpha: true
+    alpha: true,
+    preserveDrawingBuffer: true,
   });
   renderer.setSize( W, H );
   renderer.setPixelRatio( window.devicePixelRatio );
@@ -79,9 +81,11 @@ document.addEventListener('keydown', e => {
   // console.log(e.key, e.keyCode, e);
 
   if (e.key == 'f') { // f .. fullscreen
-    if (!document.webkitFullscreenElement) {
-      document.querySelector('body').webkitRequestFullscreen();
-    } else { document.webkitExitFullscreen(); }
+    util.toggleFullscreen();
+  }
+  
+  else if (e.key == 's') { // s .. save frame
+    util.saveCanvas();
   }
 
   else if (e.key == '1') {

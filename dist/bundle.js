@@ -48696,6 +48696,33 @@
 
 	} );
 
+	function toggleFullscreen() {
+	  if (document.webkitFullscreenEnabled) { // Chrome, Opera, Safari
+	    if (!document.webkitFullscreenElement) {
+	      document.querySelector('body').webkitRequestFullscreen();
+	    } else { document.webkitExitFullscreen(); }
+	  } else if (document.mozFullScreenEnabled) { // Firefox
+	    if (!document.mozFullScreenElement) {
+	      document.querySelector('body').mozRequestFullScreen();
+	    } else { document.mozCancelFullScreen(); }
+	  } else if (document.fullscreenEnabled) { // Standard, Edge
+	    if (!document.fullscreenElement) {
+	      document.querySelector('body').requestFullscreen();
+	    } else { document.exitFullscreen(); }
+	  }
+	}
+
+
+	// NOTE: Needs THREE.WebGLRenderer with preserveDrawingBuffer=true
+	function saveCanvas() {
+	  let canvas = document.querySelector('canvas');
+	  let link = document.createElement('a');
+	  let timestamp = new Date().toISOString();
+	  link.download = timestamp + '.png';
+	  link.href = canvas.toDataURL();
+	  link.click();
+	}
+
 	const W = 1280;
 	const H = 800;
 
@@ -48718,7 +48745,8 @@
 
 	  renderer = new THREE.WebGLRenderer({
 	    antialias: true,
-	    alpha: true
+	    alpha: true,
+	    preserveDrawingBuffer: true,
 	  });
 	  renderer.setSize( W, H );
 	  renderer.setPixelRatio( window.devicePixelRatio );
@@ -48741,16 +48769,18 @@
 	      transparent: true,
 	      opacity: 0.8,
 	      // blending: THREE.MultiplyBlending
-	   });
+	    });
 	    let mesh = new THREE.Mesh( new THREE.TorusBufferGeometry( 1+i, 1/(1+i*0.5), 30, 100 ), mat );
 	    // let mesh = new THREE.Mesh( new THREE.CylinderGeometry( 1+i, 1+i, 0.1, 32 ), mat );
 	    circles.push( mesh );
 	    scene.add( mesh );
 	  }
 	  console.log( circles );
-
-
 	}
+
+	// let angle;
+	// let stepAngle;
+	// let steps;
 
 	function loop(time) { // eslint-disable-line no-unused-vars
 
@@ -48772,9 +48802,11 @@
 	  // console.log(e.key, e.keyCode, e);
 
 	  if (e.key == 'f') { // f .. fullscreen
-	    if (!document.webkitFullscreenElement) {
-	      document.querySelector('body').webkitRequestFullscreen();
-	    } else { document.webkitExitFullscreen(); }
+	    toggleFullscreen();
+	  }
+	  
+	  else if (e.key == 's') { // s .. save frame
+	    saveCanvas();
 	  }
 
 	  else if (e.key == '1') {
@@ -48790,7 +48822,7 @@
 	        transparent: true,
 	        opacity: 0.8,
 	        // blending: THREE.MultiplyBlending
-	     });
+	      });
 	      let mesh = new THREE.Mesh( new THREE.TorusBufferGeometry( 1+i, 1/(1+i*0.5), 30, 60 ), mat );
 	      // let mesh = new THREE.Mesh( new THREE.CylinderGeometry( 1+i, 1+i, 0.1, 32 ), mat );
 	      circles.push( mesh );
@@ -48812,7 +48844,7 @@
 	        transparent: true,
 	        // opacity: 0.8,
 	        blending: THREE.MultiplyBlending
-	     });
+	      });
 	      let mesh = new THREE.Mesh( new THREE.TorusBufferGeometry( 1+i, 1/(1+i*0.5), 30, 60 ), mat );
 	      // let mesh = new THREE.Mesh( new THREE.CylinderGeometry( 1+i, 1+i, 0.1, 32 ), mat );
 	      circles.push( mesh );
@@ -48834,7 +48866,7 @@
 	        transparent: true,
 	        opacity: 0.8
 	        // blending: THREE.MultiplyBlending
-	     });
+	      });
 	      let mesh = new THREE.Mesh( new THREE.TorusBufferGeometry( 1+i, 1/(1+i*0.5), 30, 60 ), mat );
 	      // let mesh = new THREE.Mesh( new THREE.CylinderGeometry( 1+i, 1+i, 0.1, 32 ), mat );
 	      circles.push( mesh );
