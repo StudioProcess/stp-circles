@@ -88,6 +88,12 @@ document.addEventListener('keydown', e => {
   else if (e.key == ' ') { // SPACE .. play/pause
     playing = !playing;
   }
+  
+  else if (e.key == 'h') { // h .. toggle help
+    let box = document.querySelector('#help');
+    if (box.style.opacity > 0 || box.style.opacity === '') { box.style.opacity = 0; } 
+    else { box.style.opacity = 1; }
+  }
 
   else if (e.key == '1') {
     colors = [0xffffff];

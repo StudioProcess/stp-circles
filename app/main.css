@@ -15,3 +15,16 @@ canvas {
   width: 100% !important;
   height: auto !important;
 }
+
+#help {
+  position: fixed;
+  top: 0;
+  left: 0;
+  font: 8pt 'system-ui';
+  background-color: rgba(255,255,255,1.0);
+  transition: opacity 0.1s;
+  margin: 1em;
+  padding: 0.25em;
+}
+
+#help td:first-child { text-align: right; padding-right: 1em; }
