@@ -10,7 +10,7 @@ let controls; // eslint-disable-line no-unused-vars
 let circles = [];
 let numberCircles = 10;
 let colors = [];
-
+let playing = true; // play/pause state
 
 (function main() {
 
@@ -57,23 +57,20 @@ function setup() {
   console.log( circles );
 }
 
-// let angle;
-// let stepAngle;
-// let steps;
 
 function loop(time) { // eslint-disable-line no-unused-vars
-
-  for(let i = 0; i < numberCircles; i++) {
-    circles[i].position.x = Math.sin( (i+1)*time/3000 );
-    // circles[i].position.y = i;
-    circles[i].position.y = Math.cos( (i+1)*time/3000 );
-    // circles[i].position.z = Math.cos( (i+1)*time/2000 );
-    circles[i].position.z = 1-(i*0.5);
+  if (playing) {
+    for(let i = 0; i < numberCircles; i++) {
+      circles[i].position.x = Math.sin( (i+1)*time/3000 );
+      // circles[i].position.y = i;
+      circles[i].position.y = Math.cos( (i+1)*time/3000 );
+      // circles[i].position.z = Math.cos( (i+1)*time/2000 );
+      circles[i].position.z = 1-(i*0.5);
+    }
   }
-
+  
   requestAnimationFrame( loop );
   renderer.render( scene, camera );
-
 }
 
 
@@ -86,6 +83,10 @@ document.addEventListener('keydown', e => {
   
   else if (e.key == 's') { // s .. save frame
     util.saveCanvas();
+  }
+  
+  else if (e.key == ' ') { // SPACE .. play/pause
+    playing = !playing;
   }
 
   else if (e.key == '1') {
