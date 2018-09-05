@@ -48731,7 +48731,7 @@
 	let circles = [];
 	let numberCircles = 10;
 	let colors = [];
-
+	let playing = true; // play/pause state
 
 	(function main() {
 
@@ -48778,23 +48778,20 @@
 	  console.log( circles );
 	}
 
-	// let angle;
-	// let stepAngle;
-	// let steps;
 
 	function loop(time) { // eslint-disable-line no-unused-vars
-
-	  for(let i = 0; i < numberCircles; i++) {
-	    circles[i].position.x = Math.sin( (i+1)*time/3000 );
-	    // circles[i].position.y = i;
-	    circles[i].position.y = Math.cos( (i+1)*time/3000 );
-	    // circles[i].position.z = Math.cos( (i+1)*time/2000 );
-	    circles[i].position.z = 1-(i*0.5);
+	  if (playing) {
+	    for(let i = 0; i < numberCircles; i++) {
+	      circles[i].position.x = Math.sin( (i+1)*time/3000 );
+	      // circles[i].position.y = i;
+	      circles[i].position.y = Math.cos( (i+1)*time/3000 );
+	      // circles[i].position.z = Math.cos( (i+1)*time/2000 );
+	      circles[i].position.z = 1-(i*0.5);
+	    }
 	  }
-
+	  
 	  requestAnimationFrame( loop );
 	  renderer.render( scene, camera );
-
 	}
 
 
@@ -48807,6 +48804,16 @@
 	  
 	  else if (e.key == 's') { // s .. save frame
 	    saveCanvas();
+	  }
+	  
+	  else if (e.key == ' ') { // SPACE .. play/pause
+	    playing = !playing;
+	  }
+	  
+	  else if (e.key == 'h') { // h .. toggle help
+	    let box = document.querySelector('#help');
+	    if (box.style.opacity > 0 || box.style.opacity === '') { box.style.opacity = 0; } 
+	    else { box.style.opacity = 1; }
 	  }
 
 	  else if (e.key == '1') {
