@@ -77,6 +77,13 @@ function loop(time) { // eslint-disable-line no-unused-vars
 }
 
 
+document.querySelector('.close').addEventListener('click', () => {
+  let box = document.querySelector('#help');
+  box.style.opacity = 0;
+  box.style.pointerEvents = 'none';
+});
+
+
 document.addEventListener('keydown', e => {
   // console.log(e.key, e.keyCode, e);
 
@@ -95,8 +102,14 @@ document.addEventListener('keydown', e => {
   
   else if (e.key == 'h') { // h .. toggle help
     let box = document.querySelector('#help');
-    if (box.style.opacity > 0 || box.style.opacity === '') { box.style.opacity = 0; } 
-    else { box.style.opacity = 1; }
+    if (box.style.opacity > 0 || box.style.opacity === '') { 
+      box.style.opacity = 0; 
+      box.style.pointerEvents = 'none';
+    } 
+    else { 
+      box.style.opacity = 1.0;
+      box.style.pointerEvents = 'all';
+    }
   }
 
   else if (e.key == '1') {
