@@ -48723,6 +48723,42 @@
 	  link.click();
 	}
 
+	let globalTime = 0;
+	let offset = 0;
+
+	let running = true;
+	let lastStoppedTime = 0;
+	let pauseDuration = 0;
+
+	function update(time) {
+	  globalTime = time;
+	  if (!running) {
+	    pauseDuration = globalTime - lastStoppedTime;
+	  }
+	}
+
+	function start() {
+	  if (running) return;
+	  offset += pauseDuration;
+	  pauseDuration = 0;
+	  running = true;
+	}
+
+	function stop() { 
+	  if (!running) return;
+	  lastStoppedTime = globalTime;
+	  running = false;
+	}
+
+	function toggle() {
+	  if (running) { stop(); }
+	  else { start(); }
+	}
+
+	function time() {
+	  return globalTime - offset - pauseDuration;
+	}
+
 	const W = 1280;
 	const H = 800;
 
@@ -48731,7 +48767,7 @@
 	let circles = [];
 	let numberCircles = 10;
 	let colors = [];
-	let playing = true; // play/pause state
+	// let playing = true; // play/pause state
 
 	(function main() {
 
@@ -48779,15 +48815,17 @@
 	}
 
 
-	function loop(time) { // eslint-disable-line no-unused-vars
-	  if (playing) {
-	    for(let i = 0; i < numberCircles; i++) {
-	      circles[i].position.x = Math.sin( (i+1)*time/3000 );
-	      // circles[i].position.y = i;
-	      circles[i].position.y = Math.cos( (i+1)*time/3000 );
-	      // circles[i].position.z = Math.cos( (i+1)*time/2000 );
-	      circles[i].position.z = 1-(i*0.5);
-	    }
+	function loop(time$$1) { // eslint-disable-line no-unused-vars
+	  update(time$$1);
+	  time$$1 = time();
+	  console.log(time$$1);
+	  
+	  for(let i = 0; i < numberCircles; i++) {
+	    circles[i].position.x = Math.sin( (i+1)*time$$1/3000 );
+	    // circles[i].position.y = i;
+	    circles[i].position.y = Math.cos( (i+1)*time$$1/3000 );
+	    // circles[i].position.z = Math.cos( (i+1)*time/2000 );
+	    circles[i].position.z = 1-(i*0.5);
 	  }
 	  
 	  requestAnimationFrame( loop );
@@ -48807,7 +48845,8 @@
 	  }
 	  
 	  else if (e.key == ' ') { // SPACE .. play/pause
-	    playing = !playing;
+	    toggle();
+	    e.preventDefault();
 	  }
 	  
 	  else if (e.key == 'h') { // h .. toggle help

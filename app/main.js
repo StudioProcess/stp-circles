@@ -1,6 +1,7 @@
 import '../lib/loadThree.js';
 import '../node_modules/three/examples/js/controls/OrbitControls.js';
 import * as util from './util.js';
+import * as clock from './clock.js';
 
 const W = 1280;
 const H = 800;
@@ -10,7 +11,7 @@ let controls; // eslint-disable-line no-unused-vars
 let circles = [];
 let numberCircles = 10;
 let colors = [];
-let playing = true; // play/pause state
+// let playing = true; // play/pause state
 
 (function main() {
 
@@ -59,14 +60,16 @@ function setup() {
 
 
 function loop(time) { // eslint-disable-line no-unused-vars
-  if (playing) {
-    for(let i = 0; i < numberCircles; i++) {
-      circles[i].position.x = Math.sin( (i+1)*time/3000 );
-      // circles[i].position.y = i;
-      circles[i].position.y = Math.cos( (i+1)*time/3000 );
-      // circles[i].position.z = Math.cos( (i+1)*time/2000 );
-      circles[i].position.z = 1-(i*0.5);
-    }
+  clock.update(time);
+  time = clock.time();
+  console.log(time);
+  
+  for(let i = 0; i < numberCircles; i++) {
+    circles[i].position.x = Math.sin( (i+1)*time/3000 );
+    // circles[i].position.y = i;
+    circles[i].position.y = Math.cos( (i+1)*time/3000 );
+    // circles[i].position.z = Math.cos( (i+1)*time/2000 );
+    circles[i].position.z = 1-(i*0.5);
   }
   
   requestAnimationFrame( loop );
@@ -86,7 +89,8 @@ document.addEventListener('keydown', e => {
   }
   
   else if (e.key == ' ') { // SPACE .. play/pause
-    playing = !playing;
+    clock.toggle();
+    e.preventDefault();
   }
   
   else if (e.key == 'h') { // h .. toggle help
