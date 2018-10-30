@@ -11,6 +11,7 @@ let controls; // eslint-disable-line no-unused-vars
 // let elements = [];
 let numberElements = 30;
 let elementSize = 0.1;
+let radiusScale = 1;
 // let colors = [];
 // let offset = 0.2;
 // let t = 0.1;
@@ -32,7 +33,7 @@ function setup() {
   });
   renderer.setSize( W, H );
   renderer.setPixelRatio( window.devicePixelRatio );
-  renderer.setClearColor(0x003699);
+  renderer.setClearColor( 0xFFFFFF ); //0x003699
   renderer.gammaInput = true;
   renderer.gammaOutput = true;
   document.body.appendChild( renderer.domElement );
@@ -42,10 +43,11 @@ function setup() {
   var aspect = W / H;
   var d = 3; // camera distance
   camera = new THREE.OrthographicCamera( - d * aspect, d * aspect, d, - d, 1, 10000 );
-  camera.position.set( 200, 200, 200 ); // all components equal
+  camera.position.set( 2000, 2000, 2000 ); // all components equal
   // camera.position.z = 600;
-  camera.rotation.y = 90;
-  // camera.lookAt( scene.position ); // or the origin
+  camera.rotation.x = 0;// = ( 0, 0, 0);
+  camera.rotation.y = 0;
+  camera.rotation.z = 0;
   controls = new THREE.OrbitControls( camera, renderer.domElement );
 
   // colors = [0xFFFFFF];
@@ -99,7 +101,7 @@ var planetColors = [
 for (var p = 0, radii = 0; p < numberElements; p++) {
   var size = elementSize,// Math.random() * 2,
     type = Math.floor(Math.random() * planetColors.length),
-    roughness = 20, //Math.random() > .6 ? 1 : 0,
+    roughness = 10, //Math.random() > .6 ? 1 : 0,
     planetGeom = new THREE.Mesh(
       new THREE.SphereGeometry( elementSize, roughness, roughness ),
       // new THREE.IcosahedronGeometry(size, roughness),
@@ -115,7 +117,7 @@ for (var p = 0, radii = 0; p < numberElements; p++) {
 
   planet.add(planetGeom);
 
-  planet.orbitRadius = 1;
+  planet.orbitRadius = radiusScale;
   if(p%2==0){ planet.orbitRadius += Math.random() * 2 + radii; }  //Math.random() * 2 + 2 + radii;
   planet.rotSpeed = 0.02;//0.005 + Math.random() * 0.01;
   // planet.rotSpeed *= Math.random() < .10 ? -1 : 1;
@@ -129,18 +131,18 @@ for (var p = 0, radii = 0; p < numberElements; p++) {
   scene.add(planet);
 
   // orbit line
-  var orbit = new THREE.Line(
-    new THREE.CircleGeometry(planet.orbitRadius, 90),
-    new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      transparent: true,
-      opacity: 0.1,
-      side: THREE.BackSide
-    })
-  );
-  orbit.geometry.vertices.shift();
-  orbit.rotation.x = THREE.Math.degToRad(90);
-  scene.add(orbit);
+  // var orbit = new THREE.Line(
+  //   new THREE.CircleGeometry(planet.orbitRadius, 90),
+  //   new THREE.MeshBasicMaterial({
+  //     color: 0xed334e,
+  //     transparent: true,
+  //     opacity: 0.1,
+  //     side: THREE.BackSide
+  //   })
+  // );
+  // orbit.geometry.vertices.shift();
+  // orbit.rotation.x = THREE.Math.degToRad(90);
+  // scene.add(orbit);
 }
 ////
 
@@ -187,9 +189,8 @@ document.addEventListener('keydown', e => {
   }
 
   else if (e.key == ' ') { // SPACE .. play/pause
-    clock.toggle();
+    // clock.toggle();
     e.preventDefault();
-    console.log( camera );
   }
 
   else if (e.key == 'h') { // h .. toggle help
