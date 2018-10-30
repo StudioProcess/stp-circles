@@ -8,10 +8,12 @@ const H = 800;
 
 let renderer, scene, camera;
 let controls; // eslint-disable-line no-unused-vars
-let circles = [];
-let numberCircles = 10;
-let colors = [];
-// let playing = true; // play/pause state
+// let elements = [];
+let numberElements = 30;
+let elementSize = 0.1;
+// let colors = [];
+// let offset = 0.2;
+// let t = 0.1;
 
 (function main() {
 
@@ -37,45 +39,134 @@ function setup() {
 
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera( 75, W / H, 0.01, 1000 );
+  var aspect = W / H;
+  var d = 3; // camera distance
+  camera = new THREE.OrthographicCamera( - d * aspect, d * aspect, d, - d, 1, 10000 );
+  camera.position.set( 200, 200, 200 ); // all components equal
+  // camera.position.z = 600;
+  camera.rotation.y = 90;
+  // camera.lookAt( scene.position ); // or the origin
   controls = new THREE.OrbitControls( camera, renderer.domElement );
-  camera.position.z = 15;
 
-
-  colors = [0xFFFFFF];
-  for(let i = 0; i < numberCircles; i++) {
-    let mat = new THREE.MeshBasicMaterial({
-      color: colors[i%colors.length],
-      wireframe: false,
-      transparent: true,
-      opacity: 0.8,
-      // blending: THREE.MultiplyBlending
-    });
-    let mesh = new THREE.Mesh( new THREE.TorusBufferGeometry( 1+i, 1/(1+i*0.5), 30, 100 ), mat );
-    // let mesh = new THREE.Mesh( new THREE.CylinderGeometry( 1+i, 1+i, 0.1, 32 ), mat );
-    circles.push( mesh );
-    scene.add( mesh );
-  }
-  console.log( circles );
+  // colors = [0xFFFFFF];
+  // for(let i = 0; i < numberElements; i++) {
+  //   let mat = new THREE.MeshBasicMaterial({
+  //     color: colors[i%colors.length],
+  //     wireframe: false,
+  //     transparent: true,
+  //     opacity: 0.8,
+  //     // blending: THREE.MultiplyBlending
+  //   });
+  //   let mesh = new THREE.Mesh( new THREE.SphereGeometry( 0.1, 20, 20 ), mat );
+  //   elements.push( mesh );
+  //   scene.add( mesh );
+  // }
+  // console.log( elements );
 }
 
+
+////
+
+//Objects
+var starColor = (function() {
+    var colors = [0x0885c2, 0xfbb132, 0x666666, 0x1c8b3c, 0xed334e]; //[0xFFFF00, 0x559999, 0xFF6339, 0xFFFFFF];
+    return colors[Math.floor(Math.random() * colors.length)];
+  })(),
+  star = new THREE.Mesh(
+    // new THREE.IcosahedronGeometry(0.3, 1),
+    new THREE.SphereGeometry( elementSize, 20, 20 ),
+    new THREE.MeshBasicMaterial({
+      color: 0x0885c2,
+      wireframe: false,
+      transparent: true,
+      opacity: 1,
+      // blending: THREE.MultiplyBlending
+    })
+  );
+
+star.castShadow = false;
+scene.add(star);
+
+var planetColors = [
+    0x0885c2,
+    0xfbb132,
+    0x666666,
+    0x1c8b3c,
+    0xed334e
+  ],
+  planets = [];
+
+for (var p = 0, radii = 0; p < numberElements; p++) {
+  var size = elementSize,// Math.random() * 2,
+    type = Math.floor(Math.random() * planetColors.length),
+    roughness = 20, //Math.random() > .6 ? 1 : 0,
+    planetGeom = new THREE.Mesh(
+      new THREE.SphereGeometry( elementSize, roughness, roughness ),
+      // new THREE.IcosahedronGeometry(size, roughness),
+      new THREE.MeshBasicMaterial({
+        color: planetColors[type],
+        // shading: THREE.FlatShading,
+        wireframe: false,
+        transparent: true,
+        opacity: 1,
+      })
+    ),
+    planet = new THREE.Object3D();
+
+  planet.add(planetGeom);
+
+  planet.orbitRadius = 1;
+  if(p%2==0){ planet.orbitRadius += Math.random() * 2 + radii; }  //Math.random() * 2 + 2 + radii;
+  planet.rotSpeed = 0.02;//0.005 + Math.random() * 0.01;
+  // planet.rotSpeed *= Math.random() < .10 ? -1 : 1;
+  planet.rot = Math.random();
+  planet.orbitSpeed = (0.02 - p * 0.0048) * 0.05;
+  planet.orbit = Math.random() * Math.PI * 2;
+  planet.position.set(planet.orbitRadius, 0, 0);
+
+  radii = planet.orbitRadius + size;
+  planets.push(planet);
+  scene.add(planet);
+
+  // orbit line
+  var orbit = new THREE.Line(
+    new THREE.CircleGeometry(planet.orbitRadius, 90),
+    new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      transparent: true,
+      opacity: 0.1,
+      side: THREE.BackSide
+    })
+  );
+  orbit.geometry.vertices.shift();
+  orbit.rotation.x = THREE.Math.degToRad(90);
+  scene.add(orbit);
+}
+////
 
 function loop(time) { // eslint-disable-line no-unused-vars
   clock.update(time);
   time = clock.time();
-  console.log(time);
-  
-  for(let i = 0; i < numberCircles; i++) {
-    circles[i].position.x = Math.sin( (i+1)*time/3000 );
-    // circles[i].position.y = i;
-    circles[i].position.y = Math.cos( (i+1)*time/3000 );
-    // circles[i].position.z = Math.cos( (i+1)*time/2000 );
-    circles[i].position.z = 1-(i*0.5);
+  // console.log(time);
+
+  // for(let i = 0; i < numberElements; i++) {
+  //   elements[i].position.x = Math.sin( (i+1)*time/20000 ) + offset ;
+  //   elements[i].position.y = Math.cos( (i+1)*time/20000 ) + offset;
+  //   elements[i].position.z = 0 ;//1-(i*0.5);
+  // }
+
+  ////
+  for (var p in planets) {
+    var planet = planets[p];
+    planet.rot += planet.rotSpeed;
+    planet.rotation.set(0, planet.rot, 0);
+    planet.orbit += planet.orbitSpeed;
+    planet.position.set(Math.cos(planet.orbit) * planet.orbitRadius, 0, Math.sin(planet.orbit) * planet.orbitRadius);
   }
-  
+
   requestAnimationFrame( loop );
   renderer.render( scene, camera );
 }
-
 
 document.querySelector('.close').addEventListener('click', () => {
   let box = document.querySelector('#help');
@@ -90,91 +181,26 @@ document.addEventListener('keydown', e => {
   if (e.key == 'f') { // f .. fullscreen
     util.toggleFullscreen();
   }
-  
+
   else if (e.key == 's') { // s .. save frame
     util.saveCanvas();
   }
-  
+
   else if (e.key == ' ') { // SPACE .. play/pause
     clock.toggle();
     e.preventDefault();
+    console.log( camera );
   }
-  
+
   else if (e.key == 'h') { // h .. toggle help
     let box = document.querySelector('#help');
-    if (box.style.opacity > 0 || box.style.opacity === '') { 
-      box.style.opacity = 0; 
+    if (box.style.opacity > 0 || box.style.opacity === '') {
+      box.style.opacity = 0;
       box.style.pointerEvents = 'none';
-    } 
-    else { 
+    }
+    else {
       box.style.opacity = 1.0;
       box.style.pointerEvents = 'all';
-    }
-  }
-
-  else if (e.key == '1') {
-    colors = [0xffffff];
-    for(let i = 0; i < numberCircles; i++) {
-      scene.remove(circles[i]);
-    }
-    circles = [];
-    for(let i = 0; i < numberCircles; i++) {
-      let mat = new THREE.MeshBasicMaterial({
-        color: colors[i%colors.length],
-        wireframe: false,
-        transparent: true,
-        opacity: 0.8,
-        // blending: THREE.MultiplyBlending
-      });
-      let mesh = new THREE.Mesh( new THREE.TorusBufferGeometry( 1+i, 1/(1+i*0.5), 30, 60 ), mat );
-      // let mesh = new THREE.Mesh( new THREE.CylinderGeometry( 1+i, 1+i, 0.1, 32 ), mat );
-      circles.push( mesh );
-      scene.add( mesh );
-      renderer.setClearColor(0x003699);
-    }
-  }
-
-  else if (e.key == '2') {
-    colors = [0x0885c2, 0xfbb132, 0x666666, 0x1c8b3c, 0xed334e];
-    for(let i = 0; i < numberCircles; i++) {
-      scene.remove(circles[i]);
-    }
-    circles = [];
-    for(let i = 0; i < numberCircles; i++) {
-      let mat = new THREE.MeshBasicMaterial({
-        color: colors[i%colors.length],
-        wireframe: false,
-        transparent: true,
-        // opacity: 0.8,
-        blending: THREE.MultiplyBlending
-      });
-      let mesh = new THREE.Mesh( new THREE.TorusBufferGeometry( 1+i, 1/(1+i*0.5), 30, 60 ), mat );
-      // let mesh = new THREE.Mesh( new THREE.CylinderGeometry( 1+i, 1+i, 0.1, 32 ), mat );
-      circles.push( mesh );
-      scene.add( mesh );
-      renderer.setClearColor(0xFFFFFF);
-    }
-  }
-
-  else if (e.key == '3') {
-    colors = [0xFFFFFF, 0xEEEEEE, 0xDDDDDD, 0xCCCCCC, 0xBBBBBB, 0xAAAAAA, 0x777777, 0x444444, 0x333333, 0x222222];
-    for(let i = 0; i < numberCircles; i++) {
-      scene.remove(circles[i]);
-    }
-    circles = [];
-    for(let i = 0; i < numberCircles; i++) {
-      let mat = new THREE.MeshBasicMaterial({
-        color: colors[i%colors.length],
-        wireframe: false,
-        transparent: true,
-        opacity: 0.8
-        // blending: THREE.MultiplyBlending
-      });
-      let mesh = new THREE.Mesh( new THREE.TorusBufferGeometry( 1+i, 1/(1+i*0.5), 30, 60 ), mat );
-      // let mesh = new THREE.Mesh( new THREE.CylinderGeometry( 1+i, 1+i, 0.1, 32 ), mat );
-      circles.push( mesh );
-      scene.add( mesh );
-      renderer.setClearColor(0x000000);
     }
   }
 
