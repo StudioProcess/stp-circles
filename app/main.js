@@ -9,7 +9,7 @@ const H = 800;
 let renderer, scene, camera;
 let controls; // eslint-disable-line no-unused-vars
 // let elements = [];
-let numberElements = 300;
+let numberElements = 3000;
 let elementSize = 0.1;
 let radiusScale = 0.6;
 // let colors = [];
@@ -104,7 +104,7 @@ for (var p = 0, radii = 0; p < numberElements; p++) {
     roughness = Math.random() > .6 ? 1 : 0,
     planetGeom = new THREE.Mesh(
       // new THREE.BoxGeometry( elementSize, roughness, roughness ),
-      new THREE.BoxGeometry( 0.1, 0.1, 0.1 ),
+      new THREE.BoxGeometry( Math.random() * 0.1, Math.random() * 0.1, Math.random() * 0.1 ),
       // new THREE.IcosahedronGeometry(size, roughness),
       new THREE.MeshBasicMaterial({
         color: planetColors[type],
@@ -125,7 +125,8 @@ for (var p = 0, radii = 0; p < numberElements; p++) {
   planet.rotSpeed = 0.002;//0.005 + Math.random() * 0.01;
   // planet.rotSpeed *= Math.random() < .10 ? -1 : 1;
   planet.rot = Math.random();
-  planet.orbitSpeed = (0.02 - p * 0.0048) * 0.005;
+  // planet.orbitSpeed = (0.02 - p * 0.0048) * 0.005;
+  planet.orbitSpeed = Math.random() * (0.02 - 0.0048) * 0.005;
   planet.orbit = Math.random() * Math.PI * 2;
   planet.position.set(planet.orbitRadius, 0, 0);
 
