@@ -9,9 +9,9 @@ const H = 800;
 let renderer, scene, camera;
 let controls; // eslint-disable-line no-unused-vars
 // let elements = [];
-let numberElements = 30;
+let numberElements = 300;
 let elementSize = 0.1;
-let radiusScale = 1;
+let radiusScale = 0.6;
 // let colors = [];
 // let offset = 0.2;
 // let t = 0.1;
@@ -73,21 +73,21 @@ function setup() {
 var starColor = (function() {
     var colors = [0x0885c2, 0xfbb132, 0x666666, 0x1c8b3c, 0xed334e]; //[0xFFFF00, 0x559999, 0xFF6339, 0xFFFFFF];
     return colors[Math.floor(Math.random() * colors.length)];
-  })(),
-  star = new THREE.Mesh(
-    // new THREE.IcosahedronGeometry(0.3, 1),
-    new THREE.SphereGeometry( elementSize, 20, 20 ),
-    new THREE.MeshBasicMaterial({
-      color: 0x0885c2,
-      wireframe: false,
-      transparent: true,
-      opacity: 1,
-      // blending: THREE.MultiplyBlending
-    })
-  );
+  })();
+  // star = new THREE.Mesh(
+  //   // new THREE.IcosahedronGeometry(0.3, 1),
+  //   new THREE.SphereGeometry( elementSize, 20, 20 ),
+  //   new THREE.MeshBasicMaterial({
+  //     color: 0x0885c2,
+  //     wireframe: false,
+  //     transparent: true,
+  //     opacity: 1,
+  //     // blending: THREE.MultiplyBlending
+  //   })
+  // );
 
-star.castShadow = false;
-scene.add(star);
+// star.castShadow = false;
+// scene.add(star);
 
 var planetColors = [
     0x0885c2,
@@ -101,28 +101,31 @@ var planetColors = [
 for (var p = 0, radii = 0; p < numberElements; p++) {
   var size = elementSize,// Math.random() * 2,
     type = Math.floor(Math.random() * planetColors.length),
-    roughness = 10, //Math.random() > .6 ? 1 : 0,
+    roughness = Math.random() > .6 ? 1 : 0,
     planetGeom = new THREE.Mesh(
-      new THREE.SphereGeometry( elementSize, roughness, roughness ),
+      // new THREE.BoxGeometry( elementSize, roughness, roughness ),
+      new THREE.BoxGeometry( 0.1, 0.1, 0.1 ),
       // new THREE.IcosahedronGeometry(size, roughness),
       new THREE.MeshBasicMaterial({
         color: planetColors[type],
         // shading: THREE.FlatShading,
         wireframe: false,
-        transparent: true,
-        opacity: 1,
+        // transparent: false,
+        // opacity: 1,
+        blending: THREE.MultiplyBlending
       })
     ),
     planet = new THREE.Object3D();
 
   planet.add(planetGeom);
 
-  planet.orbitRadius = radiusScale;
-  if(p%2==0){ planet.orbitRadius += Math.random() * 2 + radii; }  //Math.random() * 2 + 2 + radii;
-  planet.rotSpeed = 0.02;//0.005 + Math.random() * 0.01;
+  // planet.orbitRadius = radiusScale;
+  planet.orbitRadius = (Math.random() + radii) * radiusScale;
+  // if(p%2==0){ planet.orbitRadius += Math.random() + radii; }  //Math.random() * 2 + 2 + radii;
+  planet.rotSpeed = 0.002;//0.005 + Math.random() * 0.01;
   // planet.rotSpeed *= Math.random() < .10 ? -1 : 1;
   planet.rot = Math.random();
-  planet.orbitSpeed = (0.02 - p * 0.0048) * 0.05;
+  planet.orbitSpeed = (0.02 - p * 0.0048) * 0.005;
   planet.orbit = Math.random() * Math.PI * 2;
   planet.position.set(planet.orbitRadius, 0, 0);
 
@@ -163,7 +166,7 @@ function loop(time) { // eslint-disable-line no-unused-vars
     planet.rot += planet.rotSpeed;
     planet.rotation.set(0, planet.rot, 0);
     planet.orbit += planet.orbitSpeed;
-    planet.position.set(Math.cos(planet.orbit) * planet.orbitRadius, 0, Math.sin(planet.orbit) * planet.orbitRadius);
+    planet.position.set(Math.cos(planet.orbit) * planet.orbitRadius, Math.cos(planet.orbit) * planet.orbitRadius, Math.sin(planet.orbit) * planet.orbitRadius);
   }
 
   requestAnimationFrame( loop );
