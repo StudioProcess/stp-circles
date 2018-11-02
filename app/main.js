@@ -13,13 +13,15 @@ let controls; // eslint-disable-line no-unused-vars
 let numberElements = 150;
 let elementSize = 0.3;
 let radiusScale = 0.6;
+let yRange = 0.0;
 // let colors = [];
 // let offset = 0.2;
 // let t = 0.1;
 
 export let params = {
   bgColor: '#606060',
-  colors: ['#ed1c24', '#c83e81', '#701655', '#8781bd']
+  colors: ['#ed1c24', '#c83e81', '#701655', '#8781bd'],
+  yRanges: []
 };
 
 (function main() {
@@ -31,6 +33,10 @@ export let params = {
 
 
 function setup() {
+
+  for(var i = 0; i < numberElements; i++){
+    params.yRanges[i] = Math.random() * yRange;
+  }
 
   renderer = new THREE.WebGLRenderer({
     antialias: true,
@@ -118,8 +124,8 @@ for (var p = 0, radii = 0; p < numberElements; p++) {
         color: planetColors[type],
         // shading: THREE.FlatShading,
         wireframe: false,
-        // transparent: false,
-        // opacity: 1,
+        // transparent: true,
+        // opacity: 0.8,
         blending: THREE.MultiplyBlending
       })
     ),
@@ -130,11 +136,11 @@ for (var p = 0, radii = 0; p < numberElements; p++) {
   // planet.orbitRadius = radiusScale;
   planet.orbitRadius = (Math.random() + radii) * radiusScale;
   // if(p%2==0){ planet.orbitRadius += Math.random() + radii; }  //Math.random() * 2 + 2 + radii;
-  planet.rotSpeed = 0.002;//0.005 + Math.random() * 0.01;
+  planet.rotSpeed = getRandomInt(-5, 5) * 0.0003;
   // planet.rotSpeed *= Math.random() < .10 ? -1 : 1;
   planet.rot = Math.random();
   // planet.orbitSpeed = (0.02 - p * 0.0048) * 0.005;
-  planet.orbitSpeed = Math.random() * (0.02 - 0.0048) * 0.005;
+  planet.orbitSpeed = Math.random() * (0.02 - 0.0048) * 0.009;
   planet.orbit = Math.random() * Math.PI * 2;
   planet.position.set(planet.orbitRadius, 0, 0);
 
@@ -163,6 +169,12 @@ export function setBackgroundColor(col) {
   //document.querySelector('canvas').style.backgroundColor = col;
 }
 
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+}
+
 function loop(time) { // eslint-disable-line no-unused-vars
   clock.update(time);
   time = clock.time();
@@ -183,7 +195,8 @@ function loop(time) { // eslint-disable-line no-unused-vars
     planet.position.set(
       Math.cos(planet.orbit) * planet.orbitRadius,
       //Math.tan(planet.orbit) * planet.orbitRadius,
-      0,//Math.cos(planet.orbit) * planet.orbitRadius + Math.sin(planet.orbit),
+      params.yRanges[p],
+      //0,//Math.cos(planet.orbit) * planet.orbitRadius + Math.sin(planet.orbit),
       Math.sin(planet.orbit) * planet.orbitRadius);
   }
 
