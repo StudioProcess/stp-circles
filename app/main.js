@@ -10,8 +10,8 @@ const H = 800;
 let renderer, scene, camera;
 let controls; // eslint-disable-line no-unused-vars
 // let elements = [];
-let numberElements = 500;
-let elementSize = 0.1;
+let numberElements = 150;
+let elementSize = 0.3;
 let radiusScale = 0.6;
 // let colors = [];
 // let offset = 0.2;
@@ -79,9 +79,9 @@ function setup() {
 
 //Objects
 var starColor = (function() {
-    var colors = [0x0885c2, 0xfbb132, 0x666666, 0x1c8b3c, 0xed334e]; //[0xFFFF00, 0x559999, 0xFF6339, 0xFFFFFF];
-    return colors[Math.floor(Math.random() * colors.length)];
-  })();
+  var colors = [0x0885c2, 0xfbb132, 0x666666, 0x1c8b3c, 0xed334e]; //[0xFFFF00, 0x559999, 0xFF6339, 0xFFFFFF];
+  return colors[Math.floor(Math.random() * colors.length)];
+})();
   // star = new THREE.Mesh(
   //   // new THREE.IcosahedronGeometry(0.3, 1),
   //   new THREE.SphereGeometry( elementSize, 20, 20 ),
@@ -112,7 +112,7 @@ for (var p = 0, radii = 0; p < numberElements; p++) {
     roughness = Math.random() > .6 ? 1 : 0,
     planetGeom = new THREE.Mesh(
       // new THREE.BoxGeometry( elementSize, roughness, roughness ),
-      new THREE.BoxGeometry( Math.random() * 0.1, Math.random() * 0.1, Math.random() * 0.1 ),
+      new THREE.BoxGeometry( Math.random() * elementSize, Math.random() * elementSize, Math.random() * elementSize ),
       // new THREE.IcosahedronGeometry(size, roughness),
       new THREE.MeshBasicMaterial({
         color: planetColors[type],
