@@ -2,6 +2,7 @@ import '../lib/loadThree.js';
 import '../node_modules/three/examples/js/controls/OrbitControls.js';
 import * as util from './util.js';
 import * as clock from './clock.js';
+import * as gui from './gui.js';
 
 const W = 1280;
 const H = 800;
@@ -15,6 +16,11 @@ let radiusScale = 0.6;
 // let colors = [];
 // let offset = 0.2;
 // let t = 0.1;
+
+export let params = {
+  bgColor: '#606060',
+  colors: ['#ed1c24', '#c83e81', '#701655', '#8781bd']
+};
 
 (function main() {
 
@@ -49,6 +55,8 @@ function setup() {
   camera.rotation.y = 0;
   camera.rotation.z = 0;
   controls = new THREE.OrbitControls( camera, renderer.domElement );
+
+  gui.create();
 
   // colors = [0xFFFFFF];
   // for(let i = 0; i < numberElements; i++) {
@@ -149,6 +157,11 @@ for (var p = 0, radii = 0; p < numberElements; p++) {
   // scene.add(orbit);
 }
 ////
+
+export function setBackgroundColor(col) {
+  renderer.setClearColor(col);
+  //document.querySelector('canvas').style.backgroundColor = col;
+}
 
 function loop(time) { // eslint-disable-line no-unused-vars
   clock.update(time);
