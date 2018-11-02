@@ -9,7 +9,7 @@ const H = 800;
 let renderer, scene, camera;
 let controls; // eslint-disable-line no-unused-vars
 // let elements = [];
-let numberElements = 3000;
+let numberElements = 500;
 let elementSize = 0.1;
 let radiusScale = 0.6;
 // let colors = [];
@@ -167,7 +167,11 @@ function loop(time) { // eslint-disable-line no-unused-vars
     planet.rot += planet.rotSpeed;
     planet.rotation.set(0, planet.rot, 0);
     planet.orbit += planet.orbitSpeed;
-    planet.position.set(Math.cos(planet.orbit) * planet.orbitRadius, Math.cos(planet.orbit) * planet.orbitRadius, Math.sin(planet.orbit) * planet.orbitRadius);
+    planet.position.set(
+      Math.cos(planet.orbit) * planet.orbitRadius,
+      //Math.tan(planet.orbit) * planet.orbitRadius,
+      0,//Math.cos(planet.orbit) * planet.orbitRadius + Math.sin(planet.orbit),
+      Math.sin(planet.orbit) * planet.orbitRadius);
   }
 
   requestAnimationFrame( loop );
